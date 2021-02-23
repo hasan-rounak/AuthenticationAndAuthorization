@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AuthenticationAndAutorization.Common;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace AuthenticationAndAutorization.Controllers
 {
@@ -16,11 +18,14 @@ namespace AuthenticationAndAutorization.Controllers
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
 
+        private readonly JwtTokenConfig jwtTokenConfig;
         private readonly ILogger<WeatherForecastController> _logger;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger,
+            IOptions<JwtTokenConfig> jwtTokenConfiguration)
         {
             _logger = logger;
+            jwtTokenConfig = jwtTokenConfiguration.Value;
         }
 
         [HttpGet]
@@ -31,7 +36,9 @@ namespace AuthenticationAndAutorization.Controllers
             {
                 Date = DateTime.Now.AddDays(index),
                 TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
+                //Summary = Summaries[rng.Next(Summaries.Length)]
+                // For testing IOption Only
+                Summary= jwtTokenConfig.Issuer
             })
             .ToArray();
         }
