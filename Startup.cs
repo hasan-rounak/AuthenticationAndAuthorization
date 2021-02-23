@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AuthenticationAndAutorization.Common;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -32,6 +33,7 @@ namespace AuthenticationAndAutorization
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "AuthenticationAndAutorization", Version = "v1" });
             });
+            services.Configure<JwtTokenConfig>(this.Configuration.GetSection("jwtTokenConfig"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
