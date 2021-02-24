@@ -1,4 +1,6 @@
+using AuthenticationAndAutorization.Authentication;
 using AuthenticationAndAutorization.Common;
+using AuthenticationAndAutorization.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -56,6 +58,8 @@ namespace AuthenticationAndAutorization
                     ClockSkew = TimeSpan.FromMinutes(1)
                 };
             });
+            services.AddSingleton<IJwtAuthManager, JwtAuthManager>();
+            services.AddScoped<IUserService, UserService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
