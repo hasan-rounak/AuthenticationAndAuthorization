@@ -1,5 +1,5 @@
 using AuthenticationAndAutorization.Authentication;
-using AuthenticationAndAutorization.Common;
+using AuthenticationAndAutorization.Model;
 using AuthenticationAndAutorization.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;

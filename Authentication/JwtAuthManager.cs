@@ -1,4 +1,4 @@
-﻿using AuthenticationAndAutorization.Common;
+﻿using AuthenticationAndAutorization.Model;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
