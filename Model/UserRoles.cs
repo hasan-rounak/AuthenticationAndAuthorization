@@ -1,4 +1,4 @@
-﻿namespace AuthenticationAndAutorization.Common
+﻿namespace AuthenticationAndAutorization.Model
 {
     public static class UserRoles
     {

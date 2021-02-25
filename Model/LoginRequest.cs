@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace AuthenticationAndAutorization.Common
+namespace AuthenticationAndAutorization.Model
 {
     public class LoginRequest
     {
