@@ -27,17 +27,10 @@ namespace AuthenticationAndAutorization
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "AuthenticationAndAutorization", Version = "v1" });
-            });
             var jwtConfig = new JwtTokenConfig();
-            var jwtSetting= Configuration.GetSection("jwtTokenConfig");
+            var jwtSetting = Configuration.GetSection("jwtTokenConfig");
             jwtSetting.Bind(jwtConfig);
             services.Configure<JwtTokenConfig>(jwtSetting);
-           
-            
-
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -53,13 +46,23 @@ namespace AuthenticationAndAutorization
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtConfig.Secret)),
                     ValidAudience = jwtConfig.Audience,
-                    ValidateAudience = true,
+                    ValidateAudience = false,
                     ValidateLifetime = true,
                     ClockSkew = TimeSpan.FromMinutes(1)
                 };
             });
             services.AddSingleton<IJwtAuthManager, JwtAuthManager>();
             services.AddScoped<IUserService, UserService>();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "AuthenticationAndAutorization", Version = "v1" });
+            });
+
+           
+            
+
+           
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -74,11 +77,11 @@ namespace AuthenticationAndAutorization
 
             app.UseHttpsRedirection();
 
-            app.UseRouting();
-
-            app.UseAuthorization();
+            app.UseRouting();            
 
             app.UseAuthentication();
+
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

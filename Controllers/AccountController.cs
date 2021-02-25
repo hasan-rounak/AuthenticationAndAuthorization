@@ -55,5 +55,17 @@ namespace AuthenticationAndAutorization.Controllers
                 RefreshToken = jwtResult.RefreshToken.TokenString
             });
         }
+
+        [HttpGet("user")]
+        [Authorize]
+        public ActionResult GetCurrentUser()
+        {
+            return Ok(new LoginResult
+            {
+                UserName = User.Identity.Name,
+                Role = User.FindFirst(ClaimTypes.Role)?.Value ?? string.Empty,
+                OriginalUserName = User.FindFirst("OriginalUserName")?.Value
+            });
+        }
     }
 }
