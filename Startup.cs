@@ -1,15 +1,20 @@
 using AuthenticationAndAutorization.Authentication;
 using AuthenticationAndAutorization.Model;
 using AuthenticationAndAutorization.Services;
+using AuthenticationAndAutorization.Validator;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace AuthenticationAndAutorization
@@ -26,7 +31,9 @@ namespace AuthenticationAndAutorization
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers()
+                .AddFluentValidation(
+                fv => fv.RegisterValidatorsFromAssemblyContaining<LoginRequestValdator>());
             var jwtConfig = new JwtTokenConfig();
             var jwtSetting = Configuration.GetSection("jwtTokenConfig");
             jwtSetting.Bind(jwtConfig);
@@ -58,11 +65,16 @@ namespace AuthenticationAndAutorization
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "AuthenticationAndAutorization", Version = "v1" });
             });
 
-           
-            
-
-           
-
+            services.Configure<ApiBehaviorOptions>(
+                option => option.InvalidModelStateResponseFactory = context =>
+                  {
+                      List<string> errors = context.ModelState.Values
+                                                  .SelectMany(m => m.Errors.Select(e => e.ErrorMessage))
+                                                  .ToList();
+                      return new BadRequestObjectResult(errors);
+                      
+                }
+                );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
